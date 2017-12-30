@@ -1,14 +1,18 @@
-FROM ubuntu:16.04
+# TODO: use https://gist.github.com/Xotabu4/a243d9ff25cfe276bcaa0175fb6a4b00
+FROM node:8-alpine
 
-RUN apt-get update -y
-RUN apt-get install -y python-software-properties software-properties-common language-pack-en-base
-RUN LC_ALL=en_US.UTF-8 add-apt-repository -y ppa:ondrej/php
-RUN apt-get update -y
+RUN apk add --no-cache \
+    unzip curl php7 php7-xml php7-mbstring php7-intl php7-curl php7-tokenizer php7-dom php7-pdo php7-pdo_sqlite \
+    php7-openssl php7-json php7-phar php7-zlib php7-ctype php7-pcntl php7-posix php7-session php7-iconv php7-simplexml \
+    python \
+    build-base \
+    git \
+    bash \
+    openjdk8-jre-base \
+    # chromium dependencies
+    udev \
+    ttf-freefont \
+    chromium-chromedriver \
+    chromium
 
-RUN apt-get install -y php7.1-cli php7.1-xml php7.1-mbstring \
-                       php7.1-intl php7.1-curl php7.1-mysql php7.1-sqlite3 \
-                       unzip curl
-
-# Clean up.
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ENV CHROME_BIN /usr/bin/chromium-browser
