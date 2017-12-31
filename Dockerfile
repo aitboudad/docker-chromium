@@ -1,8 +1,8 @@
 # TODO: use https://gist.github.com/Xotabu4/a243d9ff25cfe276bcaa0175fb6a4b00
-FROM node:8-alpine
+FROM alpine:3.7
 
 RUN apk add --no-cache \
-    unzip curl php7 php7-xml php7-mbstring php7-intl php7-curl php7-tokenizer php7-dom php7-pdo php7-pdo_sqlite \
+    nodejs unzip curl php7 php7-xml php7-mbstring php7-intl php7-curl php7-tokenizer php7-dom php7-pdo php7-pdo_sqlite \
     php7-openssl php7-json php7-phar php7-zlib php7-ctype php7-pcntl php7-posix php7-session php7-iconv php7-simplexml \
     python \
     build-base \
@@ -12,7 +12,4 @@ RUN apk add --no-cache \
     # chromium dependencies
     udev \
     ttf-freefont \
-    chromium-chromedriver \
     chromium
-
-ENV CHROME_BIN /usr/bin/chromium-browser
