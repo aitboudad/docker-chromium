@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     # chromium dependencies
     udev \
     ttf-freefont \
+    chromium-chromedriver \
     chromium && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     chmod +x /usr/local/bin/composer
