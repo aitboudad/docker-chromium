@@ -2,8 +2,7 @@
 FROM alpine:3.7
 
 RUN apk add --no-cache \
-    nodejs unzip curl php7 php7-xml php7-mbstring php7-intl php7-curl php7-tokenizer php7-dom php7-pdo php7-pdo_sqlite \
-    php7-openssl php7-json php7-phar php7-zlib php7-ctype php7-pcntl php7-posix php7-session php7-iconv php7-simplexml \
+    nodejs unzip curl \
     python \
     build-base \
     git \
@@ -14,6 +13,27 @@ RUN apk add --no-cache \
     ttf-freefont \
     chromium-chromedriver \
     chromium && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    chmod +x /usr/local/bin/composer && \
     rm -rf /var/cache/apk/*
+
+# https://raw.githubusercontent.com/blairg/docker-node-sass-alpine/master/Dockerfile
+# install libsass
+RUN git clone https://github.com/sass/sassc && cd sassc && \
+    git clone https://github.com/sass/libsass && \
+    SASS_LIBSASS_PATH=/sassc/libsass make && \
+    mv bin/sassc /usr/bin/sassc && \
+    cd ../ && rm -rf /sassc
+
+# created node-sass binary
+ENV SASS_BINARY_PATH=/usr/lib/node_modules/node-sass/build/Release/binding.node
+RUN git clone --recursive https://github.com/sass/node-sass.git && \
+    cd node-sass && \
+    git submodule update --init --recursive && \
+    npm install && \
+    node scripts/build -f && \
+    cd ../ && rm -rf node-sass
+
+# add binary path of node-sass to .npmrc
+RUN touch $HOME/.npmrc && echo "sass_binary_cache=${SASS_BINARY_PATH}" >> $HOME/.npmrc
+
+ENV SKIP_SASS_BINARY_DOWNLOAD_FOR_CI true
+ENV SKIP_NODE_SASS_TESTS true
